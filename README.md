@@ -9,11 +9,11 @@ This script is the culmination of many scripts and gists from github based on wo
 ## How to Run
 Paste this command into Powershell (admin):
 ```
-iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JJ8R4'))
+iex ((New-Object System.Net.WebClient).DownloadString('https://bit.ly/3HKUriB'))
 ```
 Or, shorter:
 ```
-iwr -useb https://git.io/JJ8R4 | iex
+iwr -useb https://bit.ly/3HKUriB | iex
 ```
 
 For complete details check out https://christitus.com/debloat-windows-10-2020/
