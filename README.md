@@ -1,5 +1,5 @@
 # Ultimate Windows Toolbox
-This script is the culmination of many scripts and gists from github based on work Cris Titus. I've added my own functions for easier reading and adding new functions. I'm using this script to setup my benchmark enviroment
+This script is the culmination of many scripts and gists from github based on work Chris Titus. I've added my own functions for easier reading and adding new functions. I'm using this script to setup my benchmark enviroment
 
 ## My Additions
 - functions to reduce code lenght
