@@ -89,7 +89,7 @@ function installWinGet(
 ){
     Write-Host "Installing " $package
     $ResultText.text = "`r`n" +"`r`n" + "Installing " +$package
-    winget install -e $package | Out-Host
+    winget install -e --accept-package-agreements --accept-source-agreements $package | Out-Host
     if($?) { Write-Host "Done." }
     $ResultText.text = "`r`n" +"`r`n" + "Done."
 }
@@ -114,12 +114,6 @@ function installLocalSoftware(){
 }
 
 function copyFileToDesktop($element){
-    # $filesToCopy = @("")
-
-    # foreach ($element in $filesToCopy){
-    #     Write-Host "Kopiuj�: " $element
-    #     Copy-Item $element -Destination $env:USERPROFILE"\Desktop" -Recurse
-    # }
     if(Test-Path -Path $PSScriptRoot"\"$element -PathType Leaf){
         Write-Host "Moving"$element 
         Copy-Item -Path $PSScriptRoot"\"$element -Destination $env:USERPROFILE"\Desktop" -Recurse
@@ -194,6 +188,7 @@ $RBackgroundApps = buttonCreate "Allow Background Apps" 360
 $EClipboardHistory = buttonCreate "Enable Clipboard History" 390
 $EHibernation = buttonCreate "Enable Hibernation" 420
 $dualboottime = buttonCreate "Set Time to UTC (Dual Boot)" 450
+$oldcontextmenu = buttonCreate "Context menu fix" 480
 
 
 
@@ -316,7 +311,7 @@ $Label10.Font                    = New-Object System.Drawing.Font('Microsoft San
 
 $Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$Label1,$Label4,$Panel3,$ResultText,$Label10,$Label11,$LabelChris))
 $Panel1.controls.AddRange(@($benchmarkstarter,$dx9,$creativecloud,$davinciresolve,$7zip,$winterminal,$Label2,$Label9,$discord,$telegram,$messenger,$teamspeak,$steam,$epicgames,$origin,$gchrome,$ubisoft,$battlenet))
-$Panel2.controls.AddRange(@($backgroundapps,$darkmode,$performancefx,$onedrive,$lightmode,$RBackgroundApps,$HTrayIcons,$EClipboardHistory,$InstallOneDrive,$removebloat,$reinstallbloat,$Label5,$appearancefx,$STrayIcons,$EHibernation,$dualboottime))
+$Panel2.controls.AddRange(@($oldcontextmenu,$backgroundapps,$darkmode,$performancefx,$onedrive,$lightmode,$RBackgroundApps,$HTrayIcons,$EClipboardHistory,$InstallOneDrive,$removebloat,$reinstallbloat,$Label5,$appearancefx,$STrayIcons,$EHibernation,$dualboottime))
 $Panel3.controls.AddRange(@($windowsupdatefix,$ncpa,$oldcontrolpanel,$oldsoundpanel,$oldsystempanel))
 $Panel4.controls.AddRange(@($defaultwindowsupdate,$securitywindowsupdate,$Label16,$Label17,$Label18,$Label19))
 
@@ -456,7 +451,7 @@ $Bloatware = @(
     "Microsoft.SkypeApp"
     "Microsoft.Wallet"
     "Microsoft.Whiteboard"
-    "Microsoft.WindowsAlarms"
+    # "Microsoft.WindowsAlarms"
     "microsoft.windowscommunicationsapps"
     "Microsoft.WindowsFeedbackHub"
     "Microsoft.WindowsMaps"
@@ -716,6 +711,9 @@ $oldsystempanel.Add_Click({
     cmd /c sysdm.cpl
 })
 
+oldcontextmenu.Add_Click({
+    Start-Process reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+})
 
 
 $windowsupdatefix.Add_Click({
