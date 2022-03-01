@@ -87,40 +87,37 @@ function labelCreate(
 function installWinGet(
     [string]$package
 ){
-    Write-Host "Installing " $package
-    $ResultText.text = "`r`n" +"`r`n" + "Installing " +$package
+    writeText "Installing " $package
     winget install -e --accept-package-agreements --accept-source-agreements $package | Out-Host
-    if($?) { Write-Host "Done." }
-    $ResultText.text = "`r`n" +"`r`n" + "Done."
+    if($?) { writeText "Done." }
+}
+
+function writeText (
+    [string]$text){
+        Write-Host $text
+        $ResultText.text = $text
 }
 
 function installLocalSoftware(){
-    $softwareArray = @(
-        ("dx9\DXSETUP.exe", "/silent")
-        ("RTSSSetup733.exe", "/S"),
-        ("CapFrameXBootstrapper.exe","/S")
-    )
-
-    foreach ($element in $softwareArray){
-        if(Test-Path -Path $element[0] -PathType Leaf){
-            Write-Host "Installing local exe: " $element[0]
-            Start-Process $element[0] $element[1] -Wait
-        }
-        else {
-            # Write-Host $element[0]"not found."
-            Write-Host $element[0] $element[1]
-        } 
-    }
+    writeText "Install DX9"
+    Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
+    writeText "Install Riva Tunner"
+    Start-Process $PSScriptRoot"\RTSSSetup733.exe" "/S" -Wait
+    writeText "Install CapFrameX"
+    Start-Process $PSScriptRoot"\CapFrameXBootstrapper.exe" "/S" -Wait
+    writeText "Install local software done."
 }
 
-function copyFileToDesktop($element){
-    if(Test-Path -Path $PSScriptRoot"\"$element -PathType Leaf){
-        Write-Host "Moving"$element 
-        Copy-Item -Path $PSScriptRoot"\"$element -Destination $env:USERPROFILE"\Desktop" -Recurse
-        Write-Host "Done."
+function copyFileToDesktop(
+    [string]$file)
+{
+    if(Test-Path -Path $PSScriptRoot"\"$file){
+        writeText "Copying" $file 
+        Copy-Item -Path $PSScriptRoot"\"$file -Destination $env:USERPROFILE"\Desktop" -Recurse
+        writeText "Copy $file done."
     }
     else{
-        Write-Host $element"not found."
+        writeText $PSScriptRoot"\"$file" not found."
     }
 }
 
@@ -188,9 +185,7 @@ $RBackgroundApps = buttonCreate "Allow Background Apps" 360
 $EClipboardHistory = buttonCreate "Enable Clipboard History" 390
 $EHibernation = buttonCreate "Enable Hibernation" 420
 $dualboottime = buttonCreate "Set Time to UTC (Dual Boot)" 450
-$oldcontextmenu = buttonCreate "Context menu fix" 480
-
-
+$oldcontextmenu = buttonCreate "Old context menu" 480
 
 
 $Label15                         = New-Object system.Windows.Forms.Label
@@ -306,26 +301,20 @@ $Label10.location                = New-Object System.Drawing.Point(657,430)
 $Label10.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',24)
 
 
-
-
-
 $Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$Label1,$Label4,$Panel3,$ResultText,$Label10,$Label11,$LabelChris))
-$Panel1.controls.AddRange(@($benchmarkstarter,$dx9,$creativecloud,$davinciresolve,$7zip,$winterminal,$Label2,$Label9,$discord,$telegram,$messenger,$teamspeak,$steam,$epicgames,$origin,$gchrome,$ubisoft,$battlenet))
+$Panel1.controls.AddRange(@($benchmarkstarter,$dx9,$creativecloud,$davinciresolve,$7zip,$winterminal,$Label2,$Label9,$discord,$telegram,$messenger,$teamspeak,$steam,$epicgames,$origin,$gchrome,$ubisoft,$battlenet,$testFunction))
 $Panel2.controls.AddRange(@($oldcontextmenu,$backgroundapps,$darkmode,$performancefx,$onedrive,$lightmode,$RBackgroundApps,$HTrayIcons,$EClipboardHistory,$InstallOneDrive,$removebloat,$reinstallbloat,$Label5,$appearancefx,$STrayIcons,$EHibernation,$dualboottime))
 $Panel3.controls.AddRange(@($windowsupdatefix,$ncpa,$oldcontrolpanel,$oldsoundpanel,$oldsystempanel))
 $Panel4.controls.AddRange(@($defaultwindowsupdate,$securitywindowsupdate,$Label16,$Label17,$Label18,$Label19))
 
 $testFunction.Add_Click({
-    Write-Host "DX9"
-    Write-Host $PSScriptRoot"\dx9\DXSETUP.exe"
-    Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
-    Write-Host "Done."
+    writeText "test function check"
 })
 
 $dx9.Add_Click({
-    Write-Host "DX9 Install"
+    writeText "DX9 Install"
     Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
-    Write-Host "Done."
+    writeText "Done."
 })
 
 $winterminal.Add_Click({
@@ -378,12 +367,14 @@ $benchmarktools.Add_Click({
     installWinGet("CPUID.HWMonitor")
     installWinGet("BlenderFoundation.Blender")
     installWinGet("TechPowerUp.NVCleanstall")
+    installWinGet("CPUID.CPU-Z")
+    installWinGet("TechPowerUp.GPU-Z")
     # installWinGet("")
 
     #InstalDX9
-    Write-Host "DX9 Install"
+    writeText "DX9 Install"
     Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
-    Write-Host "Done."
+    writeText "Done."
 
     installWinGet("Valve.Steam")
     installWinGet("EpicGames.EpicGamesLauncher")
@@ -395,11 +386,15 @@ $benchmarktools.Add_Click({
 
 $creativecloud.Add_Click({
     copyFileToDesktop "Creative_Cloud_Set-Up.exe"
+    writeText "Installing CreativeCloud"
+    Start-Process $env:USERPROFILE"\Desktop\Creative_Cloud_Set-Up.exe" "/quiet" -Wait
+    writeText "Install Creative_Cloud_Set-Up.exe done."
 })
 
 $davinciresolve.Add_Click({
-    Write-Host "Installing local exe"
-    Start-Process "DaVinci_Resolve_Studio_17.4.3_Windows.exe" "/q" -Wait
+    writeText "Installing Davinci Resolve"
+    Start-Process $PSScriptRoot"\DaVinci_Resolve_Studio_17.4.3_Windows.exe" "/q" -Wait
+    writeText "Install Davinci Resolve done."
 })
 
 $dualboottime.Add_Click({
@@ -433,7 +428,7 @@ $Bloatware = @(
     "Microsoft.BingHealthAndFitness"
     "Microsoft.BingTravel"
     "Microsoft.MinecraftUWP"
-    "Microsoft.GamingServices"
+    # "Microsoft.GamingServices"
     # "Microsoft.WindowsReadingList"
     "Microsoft.GetHelp"
     "Microsoft.Getstarted"
@@ -509,12 +504,10 @@ $removebloat.Add_Click({
     foreach ($Bloat in $Bloatware) {
         Get-AppxPackage -Name $Bloat| Remove-AppxPackage
         Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
-        Write-Host "Trying to remove $Bloat."
-        $ResultText.text = "`r`n" +"`r`n" + "Trying to remove $Bloat."
+        writeText "Trying to remove $Bloat."
     }
 
-    Write-Host "Finished Removing Bloatware Apps"
-    $ResultText.text = "`r`n" +"`r`n" + "Finished Removing Bloatware Apps"
+    writeText "Finished Removing Bloatware Apps"
 })
 
 $reinstallbloat.Add_Click({
@@ -657,7 +650,6 @@ $HTrayIcons.Add_Click({
 
 
 $STrayIcons.Add_Click({
-
 	Write-Host "Showing tray icons..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "EnableAutoTray" -Type DWord -Value 0
 	Write-Host "Done - Now showing all tray icons"
@@ -711,8 +703,10 @@ $oldsystempanel.Add_Click({
     cmd /c sysdm.cpl
 })
 
-oldcontextmenu.Add_Click({
-    Start-Process reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
+$oldcontextmenu.Add_Click({
+    writeText "Fix Win 11 context menu"
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" -Name "(Default)" -Value ""
+    Stop-Process -ProcessName Explorer
 })
 
 
