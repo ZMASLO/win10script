@@ -361,7 +361,7 @@ $7zip.Add_Click({
     installWinGet("7zip.7zip")
 })
 
-$benchmarktools.Add_Click({
+$benchmarkstarter.Add_Click({
     installWinGet("Google.Chrome")
     installWinGet("7zip.7zip")
     installWinGet("CPUID.HWMonitor")
@@ -454,7 +454,7 @@ $Bloatware = @(
     "Microsoft.WindowsSoundRecorder"
     "Microsoft.ConnectivityStore"
     "Microsoft.CommsPhone"
-    "Microsoft.ScreenSketch"
+    # "Microsoft.ScreenSketch"
     "Microsoft.ZuneMusic"
     "Microsoft.ZuneVideo"
     "Microsoft.YourPhone"
