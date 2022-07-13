@@ -149,7 +149,8 @@ $Label9 = labelCreate "Benchmark" 67 420
 $benchmarkstarter = buttonCreate "Benchmark Starter" 450
 $creativecloud = buttonCreate "Creative Cloud" 480
 $davinciresolve = buttonCreate "Davinci Resolve" 510
-$testFunction = buttonCreate "Test" 540
+$displaycal = buttonCreate "DisplayCal" 540
+$testFunction = buttonCreate "Test" 570
 
 $LabelChris = labelCreate "Based on Windows Toolbox by Chris Titus" 800 1000
 
@@ -247,15 +248,6 @@ $Label19.height                  = 10
 $Label19.location                = New-Object System.Drawing.Point(63,126)
 $Label19.Font                    = New-Object System.Drawing.Font('Microsoft Sans Serif',10)
 
-$PictureBox1                     = New-Object system.Windows.Forms.PictureBox
-$PictureBox1.width               = 343
-$PictureBox1.height              = 136
-$PictureBox1.location            = New-Object System.Drawing.Point(580,850)
-$PictureBox1.imageLocation       = "https://github.com/ChrisTitusTech/win10script/blob/master/titus-toolbox.png?raw=true"
-$PictureBox1.SizeMode            = [System.Windows.Forms.PictureBoxSizeMode]::zoom
-
-
-
 $Label1                          = New-Object system.Windows.Forms.Label
 $Label1.text                     = "Install"
 $Label1.AutoSize                 = $true
@@ -302,7 +294,7 @@ $Label10.Font                    = New-Object System.Drawing.Font('Microsoft San
 
 
 $Form.controls.AddRange(@($Panel1,$Panel2,$Label3,$Label15,$Panel4,$Label1,$Label4,$Panel3,$ResultText,$Label10,$Label11,$LabelChris))
-$Panel1.controls.AddRange(@($benchmarkstarter,$dx9,$creativecloud,$davinciresolve,$7zip,$winterminal,$Label2,$Label9,$discord,$telegram,$messenger,$teamspeak,$steam,$epicgames,$origin,$gchrome,$ubisoft,$battlenet,$testFunction))
+$Panel1.controls.AddRange(@($benchmarkstarter,$dx9,$creativecloud,$davinciresolve,$7zip,$winterminal,$Label2,$Label9,$discord,$telegram,$messenger,$teamspeak,$steam,$epicgames,$origin,$gchrome,$ubisoft,$battlenet,$displaycal,$testFunction))
 $Panel2.controls.AddRange(@($oldcontextmenu,$backgroundapps,$darkmode,$performancefx,$onedrive,$lightmode,$RBackgroundApps,$HTrayIcons,$EClipboardHistory,$InstallOneDrive,$removebloat,$reinstallbloat,$Label5,$appearancefx,$STrayIcons,$EHibernation,$dualboottime))
 $Panel3.controls.AddRange(@($windowsupdatefix,$ncpa,$oldcontrolpanel,$oldsoundpanel,$oldsystempanel))
 $Panel4.controls.AddRange(@($defaultwindowsupdate,$securitywindowsupdate,$Label16,$Label17,$Label18,$Label19))
@@ -365,23 +357,26 @@ $benchmarkstarter.Add_Click({
     installWinGet("Google.Chrome")
     installWinGet("7zip.7zip")
     installWinGet("CPUID.HWMonitor")
+    installWinGet("REALiX.HWiNFO")
     installWinGet("BlenderFoundation.Blender")
     installWinGet("TechPowerUp.NVCleanstall")
     installWinGet("CPUID.CPU-Z")
     installWinGet("TechPowerUp.GPU-Z")
-    # installWinGet("")
-
-    #InstalDX9
-    writeText "DX9 Install"
-    Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
-    writeText "Done."
-
     installWinGet("Valve.Steam")
     installWinGet("EpicGames.EpicGamesLauncher")
     installWinGet("Ubisoft.Connect")
 
     copyFileToDesktop "BenchmarkTools"
     installLocalSoftware
+
+    #Copy CapFrameX Config
+    if(Test-Path -Path $PSScriptRoot"\CapFrameX\Configuration"){
+        Copy-Item -Path $PSScriptRoot"\CapFrameX" -Destination $env:USERPROFILE"\Documents\CapFrameX" -Recurse
+        writeText "Copy CapFrameX Config done."
+    }
+    else{
+        writeText $PSScriptRoot"\CapFrameX\Config not found."
+    }
 })
 
 $creativecloud.Add_Click({
@@ -395,6 +390,12 @@ $davinciresolve.Add_Click({
     writeText "Installing Davinci Resolve"
     Start-Process $PSScriptRoot"\DaVinci_Resolve_Studio_17.4.3_Windows.exe" "/q" -Wait
     writeText "Install Davinci Resolve done."
+})
+
+$displaycal.Add_Click({
+    writeText "Installing DisplayCal"
+    installWinGet("FlorianHoech.DisplayCAL")
+    writeText "Installing DisplayCal done."
 })
 
 $dualboottime.Add_Click({
@@ -488,6 +489,8 @@ $Bloatware = @(
     "*HiddenCity*"
     "*AdobePhotoshopExpress*"
     "*HotspotShieldFreeVPN*"
+    "*Whatsapp*"
+    "*Disney*"
 
     #Optional: Typically not removed but you can if you need to for some reason
     "*Microsoft.Advertising.Xaml*"
