@@ -302,7 +302,7 @@ $Panel4.controls.AddRange(@($defaultwindowsupdate,$securitywindowsupdate,$Label1
 $testFunction.Add_Click({
     writeText "test function check"
 })
-
+       
 $dx9.Add_Click({
     writeText "DX9 Install"
     Start-Process $PSScriptRoot"\dx9\DXSETUP.exe" "/silent" -Wait
@@ -377,6 +377,21 @@ $benchmarkstarter.Add_Click({
     else{
         writeText $PSScriptRoot"\CapFrameX\Config not found."
     }
+
+    #Install python and dependencies for AI-Benchmark
+    writeText "Install python 3.10 from MS store"
+    installWinGet("9PJPW5LDXLZ5")
+
+    #Enable Long Paths
+    New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+
+    #install ai-benchmark and dependencies
+    writeText "Install tensorflow from PIP"
+    pip install tensorflow -Wait
+    writeText "Install ai-benchmark from PIP"
+    pip install ai-benchmark -Wait
+    
+    writeText "Benchmark Starter done."
 })
 
 $creativecloud.Add_Click({
